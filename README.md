@@ -12,7 +12,7 @@ npm install
 
 # Start dev server
 npm run dev
-```
+
 🌐 Frontend Routes
 Route	Description
 /	 - Landing Page (About section)
