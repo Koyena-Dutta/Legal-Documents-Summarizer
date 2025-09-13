@@ -1,0 +1,95 @@
+.upload-page-bg {
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #d1aaff 50%, #491E6DE0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.upload-page-container {
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.legal-text {
+  color: #7b2ff2;
+  font-weight: bold;
+}
+
+.upload-title {
+  color: #4b2178;
+  margin: 24px 0 16px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.upload-box {
+  width: 350px;
+  height: 120px;
+  border: 2px dashed #7b2ff2;
+  border-radius: 16px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  font-size: 1.1rem;
+  color: #4b2178;
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.text-area-box {
+  width: 350px;
+  height: 90px;
+  background: #eaeaea;
+  border-radius: 16px;
+  color: #b0aeb1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  font-size: 1rem;
+}
+
+.actions-row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-top: 12px;
+}
+
+.analyze-dropdown {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #7b2ff2;
+  font-size: 1rem;
+}
+
+.show-original-link {
+  color: #2d006b;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.side-illustration {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  height: 220px;
+  background: url('/src/assets/Warning Icons on Document Display 1.png') no-repeat left bottom;
+  background-size: contain;
+  opacity: 0.7;
+  z-index: 1;
+  transform: rotate(-15deg);
+}
