@@ -1,0 +1,4 @@
+serviceAccount.json
+*.pyc
+.env
+package-lock.json
