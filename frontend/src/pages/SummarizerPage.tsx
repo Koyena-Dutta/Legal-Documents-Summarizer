@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "../styles/SummarizerPage.css";
 import { useFile } from "../context/FileContext";
 import DocumentList from "../components/DocumentList";
@@ -7,20 +8,33 @@ import DocumentInsights from "../components/DocumentInsights";
 import AIPopup from "../components/AIPopup";
 import AISidebar from "../components/AISidebar";
 import LoadingOverlay from "../components/LoadingOverlay";
+import { exportSummary } from "../api";
 
-const docText = `Document will be shown here...`;
+const BACKEND_ENDPOINT = "http://localhost:8000/upload"; // <-- update to your actual endpoint
 
-const SummarizerPage = () => {
+const SummarizerPage: React.FC = () => {
+  const [docText, setDocText] = useState<string>("Document will be shown here...");
+  const [fileHash, setFileHash] = useState<string>("");
+  const location = useLocation();
+  const [docChunks, setDocChunks] = useState<string[]>([]);
+  useEffect(() => {
+    if (location.state && location.state.data) {
+      if (location.state.data.text) {
+        setDocText(location.state.data.text);
+      }
+      if (location.state.data.chunks) {
+        setDocChunks(location.state.data.chunks);
+      }
+    }
+  }, [location.state]);
   const [popup, setPopup] = useState<{ text: string; x: number; y: number } | null>(null);
   const [sidebar, setSidebar] = useState<{ open: boolean; text: string } | null>(null);
-  const [chatInput, setChatInput] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
+  const [chatInput, setChatInput] = useState<string>("");
+  const [progress, setProgress] = useState<number>(0);
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState<boolean>(false);
 
-  // Add doc upload logic
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { addFile, selectedFiles } = useFile();
+  const { addFile } = useFile();
 
   const handleAddDocClick = () => {
     if (fileInputRef.current) {
@@ -28,9 +42,8 @@ const SummarizerPage = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setIsProcessing(true);
       setShowLoadingOverlay(true);
       setProgress(0);
       let percent = 0;
@@ -39,15 +52,25 @@ const SummarizerPage = () => {
         setProgress(percent);
         if (percent >= 100) {
           clearInterval(interval);
-          setTimeout(() => {
-            setIsProcessing(false);
-            setShowLoadingOverlay(false);
-            if (e.target.files && e.target.files[0]) {
-              addFile(e.target.files[0]);
-            }
-          }, 1000);
         }
       }, 200);
+      const file = e.target.files[0];
+      // Send file to backend
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const response = await fetch(BACKEND_ENDPOINT, {
+          method: "POST",
+          body: formData,
+        });
+        const data = await response.json();
+        setDocText(data.text || "No text found in document.");
+        if (data.fileHash) setFileHash(data.fileHash);
+        addFile(file);
+      } catch (err) {
+        setDocText("Error loading document.");
+      }
+      setShowLoadingOverlay(false);
     }
   };
 
@@ -61,9 +84,14 @@ const SummarizerPage = () => {
       setPopup(null);
     }
   };
+
+  const handleChatWithAI = () => {
+    setSidebar({ open: true, text: "" });
+    setChatInput("");
+  };
   const handleCloseSidebar = () => setSidebar(null);
 
-  // Word count logic (for demo, use docText)
+  // Word count logic
   const wordCount = docText.split(/\s+/).filter(Boolean).length;
 
   return (
@@ -71,8 +99,8 @@ const SummarizerPage = () => {
       <LoadingOverlay isProcessing={showLoadingOverlay} progress={progress} />
       <div className="summarizer-container">
         <div className="summarizer-header">
-          <button className="chat-btn">Chat with AI</button>
-          <button className="export-btn">Export Summary</button>
+          <button className="chat-btn" onClick={handleChatWithAI}>Chat with AI</button>
+  <button className="export-btn" onClick={() => exportSummary(docText)}>Export Summary</button>
         </div>
         <div className="summarizer-main">
           <DocumentList onAddDoc={handleAddDocClick} />
@@ -99,6 +127,7 @@ const SummarizerPage = () => {
             chatInput={chatInput}
             setChatInput={setChatInput}
             onClose={handleCloseSidebar}
+            docChunks={docChunks}
           />
         </div>
       </div>

@@ -1,7 +1,7 @@
 import uuid
 import asyncio
 import numpy as np
-from weasyprint import HTML
+# from weasyprint import HTML  # PDF generation temporarily disabled
 from typing import List
 from core.config import settings
 from datetime import datetime, timedelta, timezone
@@ -93,38 +93,40 @@ Text: {text}
     }
 
 async def exportPdfFromSummary(summaryText: str):
-    from markdown import markdown
-    summary_html = markdown(summaryText, extensions=['extra'])
-    summaryHtml = f"""
-    <html>
-        <head>
-            <style>
-                body {{ font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; color: #333; }}
-                h1 {{ font-size: 24px; margin-bottom: 20px; }}
-                div {{ margin-bottom: 15px; }}
-                p {{ margin-bottom: 12px; text-align: justify; }}
-                ul {{ margin-left: 25px; list-style-type: disc; padding-left: 0; }}
-                li {{ margin-bottom: 8px; }}
-                strong {{ font-weight: bold; color: #000; }}
-            </style>
-        </head>
-        <body>
-            <h1>AI-Generated Summary</h1>
-            <p style="color:red; border: 1px solid red; padding: 10px; margin-bottom: 20px;">
-                <strong>Disclaimer:</strong> AI-generated summary; not legal advice.
-            </p>
-            <div>{summary_html}</div>
-        </body>
-    </html>
-    """
-    pdf = HTML(string=summaryHtml).write_pdf()
-    bucket = storage_client.bucket(settings.BUCKET_NAME)
-    pdfBlobName = f"exports/{uuid.uuid4()}-summary.pdf"
-    pdfBlob = bucket.blob(pdfBlobName)
-    pdfBlob.upload_from_string(pdf, content_type='application/pdf')
-    expiration = datetime.now(timezone.utc) + timedelta(hours=1)
-    publicUrl = pdfBlob.generate_signed_url(expiration=expiration, method='GET')
-    return {"public_url": publicUrl, "blob_name": pdfBlobName}
+    # PDF export temporarily disabled
+    # from markdown import markdown
+    # summary_html = markdown(summaryText, extensions=['extra'])
+    # summaryHtml = f"""
+    # <html>
+    #     <head>
+    #         <style>
+    #             body {{ font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; color: #333; }}
+    #             h1 {{ font-size: 24px; margin-bottom: 20px; }}
+    #             div {{ margin-bottom: 15px; }}
+    #             p {{ margin-bottom: 12px; text-align: justify; }}
+    #             ul {{ margin-left: 25px; list-style-type: disc; padding-left: 0; }}
+    #             li {{ margin-bottom: 8px; }}
+    #             strong {{ font-weight: bold; color: #000; }}
+    #         </style>
+    #     </head>
+    #     <body>
+    #         <h1>AI-Generated Summary</h1>
+    #         <p style="color:red; border: 1px solid red; padding: 10px; margin-bottom: 20px;">
+    #             <strong>Disclaimer:</strong> AI-generated summary; not legal advice.
+    #         </p>
+    #         <div>{summary_html}</div>
+    #     </body>
+    # </html>
+    # """
+    # pdf = HTML(string=summaryHtml).write_pdf()
+    # bucket = storage_client.bucket(settings.BUCKET_NAME)
+    # pdfBlobName = f"exports/{uuid.uuid4()}-summary.pdf"
+    # pdfBlob = bucket.blob(pdfBlobName)
+    # pdfBlob.upload_from_string(pdf, content_type='application/pdf')
+    # expiration = datetime.now(timezone.utc) + timedelta(hours=1)
+    # publicUrl = pdfBlob.generate_signed_url(expiration=expiration, method='GET')
+    # return {"public_url": publicUrl, "blob_name": pdfBlobName}
+    return {"message": "PDF export disabled for testing."}
 
 async def getSignedUrlForBlob(blob_name: str) -> str:
     bucket = storage_client.bucket(settings.BUCKET_NAME)

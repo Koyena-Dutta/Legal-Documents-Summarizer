@@ -9,26 +9,43 @@ const UploadPage = () => {
   const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      addFile(e.target.files[0]);
-      setIsProcessing(true);
-      setProgress(0);
-      // Simulate processing progress
-      let percent = 0;
-      const interval = setInterval(() => {
-        percent += 10;
-        setProgress(percent);
-        if (percent >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            setIsProcessing(false);
-            navigate("/summary");
-          }, 1000);
-        }
-      }, 200);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    setIsProcessing(true);
+    setProgress(20); // show progress start
+
+    try {
+      const response = await fetch("http://localhost:8000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = await response.json();
+      console.log("Backend response:", data);
+
+      // Example: store chunks/file hash in context if needed
+      addFile(file);
+
+      setProgress(100);
+      setTimeout(() => {
+        setIsProcessing(false);
+        navigate("/summary", { state: { data } });
+      }, 1000);
+    } catch (err) {
+      console.error("Error uploading file:", err);
+      setIsProcessing(false);
     }
-  };
+  }
+};
+
 
   return (
     <div className="upload-page-bg">
