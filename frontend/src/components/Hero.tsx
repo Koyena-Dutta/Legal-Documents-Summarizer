@@ -5,7 +5,7 @@ const Hero = () => {
     <div className="flex flex-col md:flex-row items-center justify-between px-12 py-16">
       {/* Left Text Section */}
       <div className="flex-1 flex flex-col items-start justify-center text-left pl-24 relative">
-        <h2 className="text-lg md:text-5xl font-bold text-gray-900 leading-tight">
+        <h2 className="text-lg md:text-5xl font-bold text-gray-900 leading-tight ">
           Understand <span className="text-purple-600">Your</span> <br />
           <span className="text-purple-900">Legal Documents</span>
           <br /> in Simple Language
@@ -26,7 +26,7 @@ const Hero = () => {
           </Link>
           <Link
             to="/signup"
-            className="px-6 py-2 border border-gray-400 text-gray-700 rounded-full hover:bg-gray-100 transition"
+            className="px-6 py-2 border border-gray-400 hover:text-white text-gray-700 rounded-full hover:bg-purple-700 transition"
           >
             Sign Up
           </Link>

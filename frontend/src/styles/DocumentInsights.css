@@ -1,0 +1,162 @@
+/* Document Insights Panel - Increased width */
+.document-insights-panel {
+  width: 350px;
+  min-width: 350px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left: 1px solid #e5e7eb;
+}
+
+/* Document Insights Container - White box with shadow */
+.insights-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  width: 100%;
+}
+
+.insights-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Insights Grid */
+.insights-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.insight-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.insight-item:last-child {
+  border-bottom: none;
+}
+
+.insight-label {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.insight-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Specific colors for different insight values */
+.insight-value.red-flags {
+  color: #dc2626;
+}
+
+.insight-value.text-chunks {
+  color: #2563eb;
+}
+
+.insight-value.word-count {
+  color: #1f2937;
+}
+
+/* Summaries Container - White box with shadow */
+.summaries-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  flex: 1;
+  width: 100%;
+}
+
+.summaries-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.summaries-icon {
+  font-size: 18px;
+}
+
+.summaries-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #7c3aed;
+  margin: 0;
+}
+
+.summaries-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Messages */
+.no-document-message,
+.loading-message {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 14px;
+  text-align: center;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.loading-message {
+  color: #3b82f6;
+}
+
+/* Responsive design */
+@media (max-width: 1400px) {
+  .document-insights-panel {
+    width: 320px;
+    min-width: 320px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .document-insights-panel {
+    width: 300px;
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .document-insights-panel {
+    width: 100%;
+    min-width: unset;
+    min-height: auto;
+    padding: 12px;
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .insights-container,
+  .summaries-container {
+    margin-bottom: 16px;
+  }
+}
+.summary-text {
+  white-space: pre-wrap;
+}

@@ -1,0 +1,173 @@
+/* Updated Documents Panel CSS */
+.documents-panel {
+  width: 300px;
+  min-width: 300px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e5e7eb;
+}
+
+/* Documents Container - White box with shadow */
+.documents-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  width: 100%;
+}
+
+/* Documents Title */
+.documents-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Document List */
+.document-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Individual Document Item */
+.document-item {
+  padding: 14px 16px; /* Increased padding */
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+/* Default hover state */
+.document-item:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+/* Selected document - Purple theme */
+.document-item.selected {
+  background-color: #f3e8ff;
+  border-color: #c084fc;
+  color: #7c3aed;
+}
+
+.document-item.selected:hover {
+  background-color: #ede9fe;
+  border-color: #a855f7;
+}
+
+/* No selection state */
+.document-item.no-selection {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: default;
+  font-style: italic;
+}
+
+.document-item.no-selection:hover {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+/* Document Info */
+.document-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.document-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.document-size {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.document-item.selected .document-size {
+  color: #8b5cf6;
+}
+
+/* Status Indicator */
+.document-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+/* Add Document Button */
+.add-doc-btn {
+  padding: 12px 16px; /* Increased padding */
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.add-doc-btn:hover {
+  background-color: #4f46e5;
+}
+
+.add-doc-btn:active {
+  background-color: #4338ca;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .documents-panel {
+    width: 280px;
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .documents-panel {
+    width: 250px;
+    min-width: 250px;
+  }
+  
+  .documents-container {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .documents-panel {
+    width: 100%;
+    min-width: unset;
+    min-height: auto;
+    padding: 12px;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .documents-container {
+    margin-bottom: 16px;
+  }
+}

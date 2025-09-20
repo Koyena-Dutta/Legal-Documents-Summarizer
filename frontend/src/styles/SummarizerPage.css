@@ -1,139 +1,142 @@
+/* Main Layout Fixes */
 .summarizer-bg {
+  background-color: #500b99 !important;
   min-height: 100vh;
-  width: 100vw;
-  height: 100vh;
-  background: #f5f6fa;
-  display: flex;
-  flex-direction: column;
 }
 
 .summarizer-container {
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
-  box-shadow: none;
-  border-radius: 0;
-  padding: 0;
+  min-height: 100vh;
 }
 
 .summarizer-header {
+  background: white;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-buttons {
   display: flex;
-  justify-content: flex-start;
-  gap: 16px;
-  margin-bottom: 0;
-  min-height: 60px;
+  gap: 12px;
   align-items: center;
 }
 
 .summarizer-main {
-  display: flex;
   flex: 1;
-  width: 100vw;
-  height: calc(100vh - 60px); /* header height */
+  display: flex;
+  background-color: #f8f9fa;
 }
 
-.documents-panel,
-.document-content,
-.document-insights {
-  height: 100%;
-}
-
+/* Left Documents Panel - Increased width and proper positioning */
 .documents-panel {
-  width: 240px;
-  background: #f7f7fa;
-  border-radius: 12px;
-  padding: 24px 16px;
-  flex-shrink: 0;
+  width: 300px; /* Increased from 280px */
+  min-width: 300px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e5e7eb;
 }
 
+/* Center Document Content - Adjust for new sidebar widths */
 .document-content {
   flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  background: #f7f7fa;
+  padding: 16px;
+  background: white;
+  margin: 16px;
+  margin-right: 8px; /* Reduced right margin */
   border-radius: 12px;
-  padding: 18px 16px;
-}
-
-.doc-textarea {
-  flex: 1;
-  width: 100%;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  padding: 12px;
-  font-size: 1rem;
-  background: #fff;
-  color: #222;
-  resize: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
   overflow-y: auto;
 }
 
-.document-insights {
-  width: 240px;
-  background: #f7f7fa;
-  border-radius: 12px;
-  padding: 24px 16px;
-  flex-shrink: 0;
-}
-
-.insights-title {
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 12px;
-}
-
-.insight-item {
-  font-size: 1rem;
-  margin-bottom: 10px;
+/* Right Document Insights Panel - Increased width */
+.document-insights-panel {
+  width: 350px; /* Increased from 320px */
+  min-width: 350px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 80px); /* Account for header */
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  flex-direction: column;
+  gap: 16px;
+  border-left: 1px solid #e5e7eb;
 }
 
-.insight-value {
-  font-weight: 600;
-  color: #4b2178;
-}
-
-.ai-sidebar {
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100vh;
-  width: 420px;
-  background: #f3eaff;
-  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.1);
-  z-index: 2000;
-  padding: 32px 24px;
-}
-
-.chat-btn, .export-btn {
-  background: #4b2178;
-  color: #fff;
-  border: none;
+/* Button Styles */
+.chat-btn, .export-btn, .add-document-btn {
+  padding: 10px 20px;
   border-radius: 8px;
-  padding: 8px 18px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+}
+
+.chat-btn, .add-document-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.chat-btn:hover, .add-document-btn:hover {
+  background-color: #2563eb;
 }
 
 .export-btn {
-  background: #00c853;
+  background-color: #10b981;
+  color: white;
 }
 
-.add-doc-btn {
-  background: #4b2178;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 18px;
-  font-size: 1.05rem;
-  margin-top: 18px;
-  cursor: pointer;
-  width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+.export-btn:hover {
+  background-color: #059669;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .documents-panel {
+    width: 280px;
+    min-width: 280px;
+  }
+  
+  .document-insights-panel {
+    width: 320px;
+    min-width: 320px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .documents-panel {
+    width: 250px;
+    min-width: 250px;
+  }
+  
+  .document-insights-panel {
+    width: 300px;
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .summarizer-main {
+    flex-direction: column;
+  }
+  
+  .documents-panel,
+  .document-insights-panel {
+    width: 100%;
+    min-width: unset;
+    min-height: auto;
+  }
+  
+  .document-content {
+    margin: 8px;
+  }
 }

@@ -19,6 +19,7 @@ class ExplainRequest(BaseModel):
     fileHash: Optional[str] = None
     chunk_index: Optional[int] = None
     text: Optional[str] = None
+    role: Optional[str] = "Neutral"
 
 class RiskAnalyzeRequest(BaseModel):
     fileHash: Optional[str] = None

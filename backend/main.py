@@ -18,6 +18,8 @@ from models.schemas import QueryRequest, ExportRequest, ExplainRequest, ChatRequ
 import hashlib
 import faiss
 from services.rag_service import build_index, search_index
+from pydantic import BaseModel
+from typing import Optional
 
 app = FastAPI()
 app.add_middleware(
@@ -54,7 +56,9 @@ def _touch_chat_key(key: str):
 async def generateSummary(fileHash: str) -> str:
     entry = proactiveCache.get(fileHash) or {}
     file_bytes = entry.get("fileContent")
+    print(f"[SUMMARY] Called for fileHash: {fileHash}")
     if not file_bytes:
+        print(f"[SUMMARY] No file bytes found for {fileHash}")
         raise Exception("Original file not available for summary generation")
 
     print(f"Starting summary generation using uploaded file for hash: {fileHash[:8]}")
@@ -100,6 +104,7 @@ async def runProactiveProcessing(fileHash: str, redFlags: List[Dict]):
     entry.setdefault("exportBlob", None)
     proactiveCache[fileHash] = entry
 
+    print(f"[PROACTIVE] Starting summary generation for {fileHash}")
     summary_task = asyncio.create_task(generateSummary(fileHash))
 
     idxMap: List[int] = []
@@ -119,12 +124,15 @@ async def runProactiveProcessing(fileHash: str, redFlags: List[Dict]):
     if explain_tasks:
         explain_results = await asyncio.gather(*explain_tasks, return_exceptions=True)
 
+    
     summaryResult = await summary_task
-
+    print(f"[PROACTIVE] Summary result for {fileHash}: {summaryResult}")
     if isinstance(summaryResult, Exception):
+        print(f"[PROACTIVE] Error generating summary for {fileHash}: {summaryResult}")
         entry["summaryError"] = str(summaryResult)
     else:
         entry["summary"] = summaryResult
+        print(f"[PROACTIVE] Summary stored for {fileHash}")
 
     explanations: Dict[int, str] = {}
     errors: Dict[int, str] = {}
@@ -298,6 +306,14 @@ async def uploadDocument(file: UploadFile = File(...), backgroundTasks: Backgrou
         "path": "fast" if pageCount and pageCount <= 15 else "robust"
     })
 
+# helper background task
+async def generateSummary(fileHash: str, text: str):
+    # 👉 replace this with your actual LLM summarizer
+    summary = f"Auto-summary for document {fileHash} ({len(text.split())} words)"
+    entry = proactiveCache.get(fileHash, {})
+    entry["summary"] = summary
+    proactiveCache[fileHash] = entry
+    print(f"✅ Summary ready for {fileHash}")
 @app.post("/query")
 async def queryEndpoint(request: QueryRequest):
     startTime = time.time()
@@ -396,6 +412,13 @@ async def exportBatchEndpoint(request: BatchExportRequest):
         results.append({"fileHash": fh, "public_url": exportRes.get("public_url"), "blob_name": exportRes.get("blob_name")})
     return JSONResponse(content={"results": results})
 
+
+class ExplainRequest(BaseModel):
+    fileHash: Optional[str] = None
+    chunk_index: Optional[int] = None
+    text: Optional[str] = None
+    role: Optional[str] = "Neutral"   # 👈 NEW
+
 @app.post("/explain")
 async def explainEndpoint(request: ExplainRequest):
     if request.fileHash and request.chunk_index is not None:
@@ -405,12 +428,21 @@ async def explainEndpoint(request: ExplainRequest):
         if cacheEntry and idx in cacheEntry.get("explanations", {}):
             return JSONResponse(content={"explanation": cacheEntry["explanations"][idx]})
         raise HTTPException(status_code=404, detail="Explanation not ready or does not exist.")
+    
     if request.text and request.text.strip():
         try:
-            result = await explainText(request.text)
+            role = request.role or "Neutral"
+            # Infuse role into the prompt
+            prompt = (
+                f"Explain this clause from the perspective of a {role}. "
+                f"What are the risks, obligations, and implications for them?\n\n"
+                f"Clause: {request.text}"
+            )
+            result = await explainText(prompt)
             return JSONResponse(content=result)
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error generating explanation: {str(e)}")
+    
     raise HTTPException(status_code=400, detail="Invalid request parameters")
 
 @app.post("/summary")
@@ -486,3 +518,5 @@ async def riskAnalyzeEndpoint(request: RiskAnalyzeRequest):
         return JSONResponse(content=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Risk analysis failed: {str(e)}")
+
+
